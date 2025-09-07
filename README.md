@@ -6,7 +6,7 @@ It integrates **AI, IoT, and advanced analytics** into a structured visual explo
 ---
 
 ## 🌍 Live Presentation
-🔗 [Real-Time Predictive Maintenance Framework]([https://devloper-gazi.github.io/Adaptive-AI-ML-Control-Framework/](https://devloper-gazi.github.io/PdM-Framework/))
+🔗 [Real-Time Predictive Maintenance Framework]((https://devloper-gazi.github.io/Adaptive-AI-ML-Control-Framework/))
 
 ---
 
