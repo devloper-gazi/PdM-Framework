@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Predictive Maintenance: A Technical Framework</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Tech Neutrals -->
+    <!-- Application Structure Plan: The application is designed as a top-down narrative dashboard. It starts with a high-level summary and key performance indicators (KPIs) to immediately convey value. It then flows into a direct comparison of maintenance strategies to establish context. This is followed by a deeper dive into the technology framework, broken into digestible, interactive components. Finally, a global landscape explorer provides geographical context and real-world adoption insights. This structure was chosen to guide the user from the 'why' (benefits) to the 'what' (comparison), the 'how' (technology), and the 'where' (global adoption), facilitating a comprehensive understanding in a logical, engaging sequence. -->
+    <!-- Visualization & Content Choices: 
+        1. Key Benefits (Cost, Downtime, Lifespan): Report Info -> Goal: Inform -> Viz: Donut Chart & Stat Cards -> Interaction: Hover on cards for detail -> Justification: Provides a quick, high-impact visual summary of core benefits. -> Library: Chart.js.
+        2. ROI Range: Report Info -> Goal: Inform/Engage -> Viz: Interactive Slider -> Interaction: User drags slider to see ROI value update -> Justification: Makes the financial benefit tangible and interactive. -> Library: Vanilla JS.
+        3. Maintenance Strategy Comparison: Report Info -> Goal: Compare -> Viz: Bar Chart & Text Blocks -> Interaction: Buttons to switch between Reactive, Preventive, and Predictive views, updating the chart and text -> Justification: Clearly contrasts the old vs. new paradigms, highlighting the massive improvements in downtime/defects. -> Library: Chart.js.
+        4. Technology Framework: Report Info -> Goal: Organize/Explain -> Viz: HTML/CSS based flowchart -> Interaction: Clicking on a stage reveals a detailed explanation -> Justification: Deconstructs a complex system into a simple, interactive flow diagram. -> Library: Vanilla JS.
+        5. Global Landscape: Researched Info -> Goal: Explore/Contextualise -> Viz: Text panels and simple bar indicators -> Interaction: Clicking a country button updates the information panel -> Justification: Fulfills user request for global context and shows real-world relevance. -> Library: Vanilla JS.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            color: #212529;
+        }
+        .nav-button {
+            transition: all 0.3s ease;
+        }
+        .nav-button.active {
+            color: #0077b6;
+            border-bottom: 2px solid #0077b6;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 640px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .tab-button.active {
+            background-color: #0077b6;
+            color: white;
+        }
+        .country-button.active {
+            background-color: #023e8a;
+            color: white;
+            border-color: #023e8a;
+        }
+        .tech-card.active {
+            border-color: #0077b6;
+            box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.3);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="text-2xl font-bold text-gray-800">PdM Framework</div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#benefits" class="nav-button text-gray-600 hover:text-blue-600 pb-1">Benefits</a>
+                    <a href="#comparison" class="nav-button text-gray-600 hover:text-blue-600 pb-1">Comparison</a>
+                    <a href="#framework" class="nav-button text-gray-600 hover:text-blue-600 pb-1">Technology</a>
+                    <a href="#global" class="nav-button text-gray-600 hover:text-blue-600 pb-1">Global Landscape</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-8">
+
+        <section id="hero" class="text-center mb-16">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-800 mb-4">Real-Time Predictive Maintenance</h1>
+            <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">A paradigm shift from reactive and preventive strategies, leveraging AI and IoT to optimise industrial asset performance, reduce costs, and eliminate unplanned downtime.</p>
+        </section>
+
+        <section id="benefits" class="mb-16">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Quantifiable Business Impact</h2>
+            <p class="text-center text-gray-600 mb-10">Implementing predictive maintenance delivers significant, measurable improvements across key operational metrics.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 items-center">
+                <div class="space-y-6">
+                    <div class="card p-6 flex items-center">
+                        <div class="p-3 bg-blue-100 rounded-full mr-4">
+                            <span class="text-2xl text-blue-600">💰</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800">18-25% Cost Reduction</h3>
+                            <p class="text-gray-600">Lower overall maintenance expenditure.</p>
+                        </div>
+                    </div>
+                    <div class="card p-6 flex items-center">
+                        <div class="p-3 bg-green-100 rounded-full mr-4">
+                            <span class="text-2xl text-green-600">⏱️</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800">35-50% Downtime Reduction</h3>
+                            <p class="text-gray-600">Minimise unplanned operational halts.</p>
+                        </div>
+                    </div>
+                    <div class="card p-6 flex items-center">
+                        <div class="p-3 bg-purple-100 rounded-full mr-4">
+                            <span class="text-2xl text-purple-600">⚙️</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800">20-40% Asset Lifespan Extension</h3>
+                            <p class="text-gray-600">Increase the operational life of machinery.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-6">
+                    <h3 class="text-xl font-semibold text-center mb-4 text-gray-800">Average Performance Gains</h3>
+                    <div class="chart-container">
+                        <canvas id="benefitsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="card p-6 mt-8">
+                <h3 class="text-2xl font-bold text-center text-gray-800 mb-4">Return on Investment (ROI)</h3>
+                <p class="text-center text-gray-600 mb-6">Industry studies report a typical ROI between 250% and 545%.</p>
+                <div class="flex flex-col items-center">
+                    <input id="roiSlider" type="range" min="250" max="545" value="397" class="w-full max-w-md h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                    <span id="roiValue" class="mt-4 text-3xl font-bold text-blue-600">397%</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="comparison" class="mb-16">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">The Evolution of Maintenance</h2>
+            <p class="text-center text-gray-600 mb-10">Understand the fundamental differences between maintenance strategies and their impact on operational efficiency.</p>
+            <div class="flex justify-center mb-8 bg-gray-100 rounded-lg p-2 max-w-md mx-auto">
+                <button data-type="reactive" class="tab-button flex-1 py-2 px-4 rounded-md font-semibold transition">Reactive</button>
+                <button data-type="preventive" class="tab-button flex-1 py-2 px-4 rounded-md font-semibold transition">Preventive</button>
+                <button data-type="predictive" class="tab-button flex-1 py-2 px-4 rounded-md font-semibold transition active">Predictive</button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-8 items-center">
+                <div id="comparison-text" class="md:col-span-2 card p-6">
+                    <h3 id="strategy-title" class="text-2xl font-bold text-gray-800 mb-4"></h3>
+                    <p id="strategy-description" class="text-gray-600 mb-4"></p>
+                    <div class="border-t pt-4">
+                        <h4 class="font-semibold text-gray-700">Key Characteristic:</h4>
+                        <p id="strategy-characteristic" class="text-gray-600"></p>
+                    </div>
+                </div>
+                <div class="md:col-span-3 card p-6">
+                     <h3 class="text-xl font-semibold text-center mb-4 text-gray-800">Relative Performance Issues</h3>
+                    <div class="chart-container" style="max-height: 350px;">
+                        <canvas id="comparisonChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="framework" class="mb-16">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">The Predictive Maintenance Technology Framework</h2>
+            <p class="text-center text-gray-600 mb-10">A multi-layered system where data is acquired, transmitted, analysed, and acted upon in real-time.</p>
+            
+            <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4 mb-8">
+                <div data-tech="sensors" class="tech-card card p-4 w-full md:w-auto text-center cursor-pointer border-2 border-transparent">
+                    <span class="text-3xl">📡</span>
+                    <h4 class="font-semibold mt-2">1. Data Acquisition</h4>
+                </div>
+                <div class="text-2xl text-gray-400 hidden md:block">→</div>
+                <div data-tech="communication" class="tech-card card p-4 w-full md:w-auto text-center cursor-pointer border-2 border-transparent">
+                    <span class="text-3xl">🌐</span>
+                    <h4 class="font-semibold mt-2">2. Data Transmission</h4>
+                </div>
+                <div class="text-2xl text-gray-400 hidden md:block">→</div>
+                <div data-tech="analytics" class="tech-card card p-4 w-full md:w-auto text-center cursor-pointer border-2 border-transparent">
+                     <span class="text-3xl">🧠</span>
+                    <h4 class="font-semibold mt-2">3. Advanced Analytics</h4>
+                </div>
+                <div class="text-2xl text-gray-400 hidden md:block">→</div>
+                <div data-tech="action" class="tech-card card p-4 w-full md:w-auto text-center cursor-pointer border-2 border-transparent">
+                    <span class="text-3xl">🛠️</span>
+                    <h4 class="font-semibold mt-2">4. Proactive Action</h4>
+                </div>
+            </div>
+
+            <div id="tech-details" class="card p-8 min-h-[200px]">
+                <h3 id="tech-title" class="text-2xl font-bold text-gray-800 mb-4"></h3>
+                <p id="tech-description" class="text-gray-600"></p>
+            </div>
+        </section>
+
+        <section id="global" class="mb-16">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Global Landscape & Adoption</h2>
+            <p class="text-center text-gray-600 mb-10">Predictive maintenance is being adopted globally, with key hubs of innovation and implementation emerging across various industrial sectors.</p>
+            
+            <div class="flex flex-wrap justify-center gap-3 mb-8">
+                <button data-country="usa" class="country-button active font-medium py-2 px-4 border border-gray-300 rounded-full transition">United States</button>
+                <button data-country="uk" class="country-button font-medium py-2 px-4 border border-gray-300 rounded-full transition">United Kingdom</button>
+                <button data-country="china" class="country-button font-medium py-2 px-4 border border-gray-300 rounded-full transition">China</button>
+                <button data-country="japan" class="country-button font-medium py-2 px-4 border border-gray-300 rounded-full transition">Japan</button>
+                <button data-country="nordics" class="country-button font-medium py-2 px-4 border border-gray-300 rounded-full transition">Northern Europe</button>
+                <button data-country="switzerland" class="country-button font-medium py-2 px-4 border border-gray-300 rounded-full transition">Switzerland</button>
+                <button data-country="israel" class="country-button font-medium py-2 px-4 border border-gray-300 rounded-full transition">Israel</button>
+                <button data-country="russia" class="country-button font-medium py-2 px-4 border border-gray-300 rounded-full transition">Russia</button>
+            </div>
+
+            <div class="card p-8">
+                <div class="flex flex-col md:flex-row items-start">
+                    <h3 id="country-title" class="text-2xl md:text-3xl font-bold text-gray-800 mb-4 md:mb-0 md:mr-6"></h3>
+                    <div id="country-adoption" class="flex items-center space-x-2">
+                        <span class="font-semibold text-gray-700">Adoption Level:</span>
+                        <div class="w-32 h-4 bg-gray-200 rounded-full">
+                            <div id="adoption-bar" class="h-4 bg-green-500 rounded-full"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="border-t my-6"></div>
+                <div>
+                    <h4 class="text-xl font-semibold text-gray-700 mb-2">Key Sectors & Focus Areas:</h4>
+                    <p id="country-sectors" class="text-gray-600"></p>
+                </div>
+                <div class="mt-4">
+                    <h4 class="text-xl font-semibold text-gray-700 mb-2">Regional Summary:</h4>
+                    <p id="country-summary" class="text-gray-600"></p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white mt-16 border-t">
+        <div class="container mx-auto px-6 py-8 text-center text-gray-600">
+            <p>&copy; 2025 Predictive Maintenance Framework Analysis. Information compiled from global industry and academic sources.</p>
+            <p class="text-sm mt-2">Standards from ISO, IEC, IEEE, and NIST provide the regulatory framework for implementation.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const benefitsData = {
+                labels: ['Maintenance Cost Reduction', 'Unplanned Downtime Reduction', 'Asset Lifespan Extension'],
+                datasets: [{
+                    label: 'Performance Gains',
+                    data: [21.5, 42.5, 30], 
+                    backgroundColor: [
+                        'rgba(59, 130, 246, 0.7)',
+                        'rgba(16, 185, 129, 0.7)',
+                        'rgba(139, 92, 246, 0.7)',
+                    ],
+                    borderColor: [
+                        'rgba(59, 130, 246, 1)',
+                        'rgba(16, 185, 129, 1)',
+                        'rgba(139, 92, 246, 1)',
+                    ],
+                    borderWidth: 1
+                }]
+            };
+
+            const benefitsCtx = document.getElementById('benefitsChart').getContext('2d');
+            new Chart(benefitsCtx, {
+                type: 'doughnut',
+                data: benefitsData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed !== null) {
+                                        label += context.parsed + '%';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            const roiSlider = document.getElementById('roiSlider');
+            const roiValue = document.getElementById('roiValue');
+            roiSlider.addEventListener('input', (event) => {
+                roiValue.textContent = `${event.target.value}%`;
+            });
+
+            const comparisonData = {
+                labels: ['Unplanned Downtime', 'Component Defects'],
+                datasets: [
+                    {
+                        label: 'Reactive',
+                        data: [3.3, 16],
+                        backgroundColor: 'rgba(239, 68, 68, 0.7)',
+                        borderColor: 'rgba(239, 68, 68, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Preventive',
+                        data: [1.8, 5],
+                        backgroundColor: 'rgba(245, 158, 11, 0.7)',
+                        borderColor: 'rgba(245, 158, 11, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Predictive',
+                        data: [1, 1],
+                        backgroundColor: 'rgba(16, 185, 129, 0.7)',
+                        borderColor: 'rgba(16, 185, 129, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            };
+
+            const comparisonCtx = document.getElementById('comparisonChart').getContext('2d');
+            const comparisonChart = new Chart(comparisonCtx, {
+                type: 'bar',
+                data: {
+                    labels: comparisonData.labels,
+                    datasets: [comparisonData.datasets[2]]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                         tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    label += context.formattedValue + 'x Multiplier';
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Multiplier vs. Predictive Baseline (1x)'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            const strategyInfo = {
+                reactive: {
+                    title: 'Reactive Maintenance',
+                    description: 'This "run-to-failure" approach involves fixing assets only after they have broken down. It is often the most expensive strategy due to unplanned downtime and collateral damage.',
+                    characteristic: 'Action triggered by failure.',
+                    chartData: comparisonData.datasets[0]
+                },
+                preventive: {
+                    title: 'Preventive Maintenance',
+                    description: 'Maintenance is performed on a fixed schedule (e.g., time-based or usage-based) to prevent failures. This can lead to unnecessary work and resource waste on healthy components.',
+                    characteristic: 'Action triggered by schedule.',
+                    chartData: comparisonData.datasets[1]
+                },
+                predictive: {
+                    title: 'Predictive Maintenance',
+                    description: 'Utilises continuous condition-monitoring and advanced analytics to predict when a failure will occur. Maintenance is performed only when needed, optimising resource allocation and minimising downtime.',
+                    characteristic: 'Action triggered by data-driven prediction.',
+                    chartData: comparisonData.datasets[2]
+                }
+            };
+
+            const tabButtons = document.querySelectorAll('.tab-button');
+            function updateComparisonView(type) {
+                const info = strategyInfo[type];
+                document.getElementById('strategy-title').textContent = info.title;
+                document.getElementById('strategy-description').textContent = info.description;
+                document.getElementById('strategy-characteristic').textContent = info.characteristic;
+
+                comparisonChart.data.datasets = [info.chartData];
+                comparisonChart.update();
+                
+                tabButtons.forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.type === type);
+                });
+            }
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    updateComparisonView(button.dataset.type);
+                });
+            });
+
+            updateComparisonView('predictive');
+
+            const techInfo = {
+                 sensors: {
+                    title: '1. Data Acquisition (Sensors)',
+                    description: 'This is the foundation of PdM. Advanced sensors (vibration, thermal, acoustic, pressure) are deployed on critical assets to continuously collect operational data. Multi-sensor fusion systems combine data streams to achieve up to 99.2% prediction accuracy.'
+                },
+                communication: {
+                    title: '2. Data Transmission (IoT & Networks)',
+                    description: 'The collected sensor data is transmitted in real-time to a central system or edge device. This relies on robust communication protocols and architectures like IoT, using wireless sensor networks with long battery life (5-10 years) to ensure constant data flow.'
+                },
+                analytics: {
+                    title: '3. Advanced Analytics (AI & Machine Learning)',
+                    description: 'This is the core intelligence layer. Machine learning algorithms and statistical models analyse the data stream to detect anomalies, identify failure patterns, and predict future breakdowns. Edge computing allows for initial analysis directly on or near the asset for faster response.'
+                },
+                action: {
+                    title: '4. Proactive Action (Optimised Scheduling)',
+                    description: 'Based on the predictions from the analytics engine, the system generates alerts and recommends specific maintenance actions. This allows maintenance teams to intervene proactively before a failure occurs, optimising schedules and resource allocation.'
+                }
+            };
+            
+            const techCards = document.querySelectorAll('.tech-card');
+            function updateTechView(tech) {
+                const info = techInfo[tech];
+                document.getElementById('tech-title').textContent = info.title;
+                document.getElementById('tech-description').textContent = info.description;
+                techCards.forEach(card => {
+                    card.classList.toggle('active', card.dataset.tech === tech);
+                });
+            }
+
+            techCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    updateTechView(card.dataset.tech);
+                });
+            });
+            updateTechView('sensors');
+            
+            const countryData = {
+                usa: {
+                    title: 'United States',
+                    adoption: 90,
+                    sectors: 'Manufacturing (especially automotive and aerospace), Energy (oil & gas), Logistics.',
+                    summary: 'A mature market leader with heavy investment from large enterprises and a strong ecosystem of tech providers and startups. Focus on integrating AI and edge computing for sophisticated, large-scale deployments. Strong support from research institutions like MIT and NIST.'
+                },
+                uk: {
+                    title: 'United Kingdom',
+                    adoption: 75,
+                    sectors: 'Aerospace & Defence, Automotive, Utilities (water, electricity), Rail Transport.',
+                    summary: 'Strong adoption driven by high-value manufacturing and critical infrastructure needs. Government initiatives like "Made Smarter" encourage adoption among SMEs. Focus on improving supply chain resilience and asset efficiency in regulated industries.'
+                },
+                china: {
+                    title: 'China',
+                    adoption: 80,
+                    sectors: 'Heavy Manufacturing, Electronics, High-Speed Rail, Renewable Energy (wind turbines).',
+                    summary: 'Rapidly growing market driven by the "Made in China 2025" initiative. Massive state-led investment in industrial IoT and AI. The focus is on scaling solutions for vast manufacturing facilities and infrastructure projects to maintain global competitiveness.'
+                },
+                japan: {
+                    title: 'Japan',
+                    adoption: 85,
+                    sectors: 'Automotive, Robotics, Electronics Manufacturing, Steel Production.',
+                    summary: 'A technologically advanced market with a long history of industrial automation. PdM is seen as a natural evolution of "kaizen" (continuous improvement). High emphasis on precision, robotics integration, and minimising defects in high-tech manufacturing.'
+                },
+                nordics: {
+                    title: 'Northern Europe',
+                    adoption: 70,
+                    sectors: 'Pulp & Paper, Maritime Shipping, Renewable Energy (especially offshore wind), Manufacturing.',
+                    summary: 'Strong focus on sustainability and efficiency drives adoption. Countries like Sweden and Finland leverage their expertise in industrial automation and telecommunications. High labour costs make the ROI of automation and PdM particularly attractive.'
+                },
+                switzerland: {
+                    title: 'Switzerland',
+                    adoption: 80,
+                    sectors: 'Pharmaceuticals, High-precision Manufacturing (e.g., watchmaking), Food & Beverage, Machine Tools.',
+                    summary: 'Adoption is driven by industries where quality and precision are paramount. The focus is on ensuring zero-defect production and maintaining complex, high-value machinery. Strong engineering culture and a hub for robotics and automation companies.'
+                },
+                israel: {
+                    title: 'Israel',
+                    adoption: 65,
+                    sectors: 'High-Tech Manufacturing (semiconductors), Defence, Water Technology.',
+                    summary: 'A hub for innovation with a world-class startup scene producing many industrial IoT and AI companies. Adoption is growing, often leveraging cutting-edge, locally developed AI algorithms for anomaly detection and cybersecurity in industrial control systems.'
+                },
+                russia: {
+                    title: 'Russia',
+                    adoption: 45,
+                    sectors: 'Oil & Gas, Metallurgy, Mining, Power Generation.',
+                    summary: 'Adoption is concentrated in heavy industries and state-owned enterprises focused on managing vast, often remote, infrastructure. The main drivers are reducing operational risks and maintaining ageing assets in challenging environmental conditions.'
+                }
+            };
+            
+            const countryButtons = document.querySelectorAll('.country-button');
+            function updateCountryView(country) {
+                const data = countryData[country];
+                document.getElementById('country-title').textContent = data.title;
+                document.getElementById('adoption-bar').style.width = `${data.adoption}%`;
+                document.getElementById('country-sectors').textContent = data.sectors;
+                document.getElementById('country-summary').textContent = data.summary;
+                
+                countryButtons.forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.country === country);
+                });
+            }
+
+            countryButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    updateCountryView(button.dataset.country);
+                });
+            });
+            updateCountryView('usa');
+            
+            const navLinks = document.querySelectorAll('.nav-button');
+            const sections = document.querySelectorAll('main section');
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 60) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${current}`) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+
+        });
+    </script>
+</body>
+</html>
