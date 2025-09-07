@@ -11,39 +11,96 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Calm Tech Neutrals -->
-    <!-- Application Structure Plan: The application is designed as a top-down narrative dashboard. It starts with a high-level summary and key performance indicators (KPIs) to immediately convey value. It then flows into a direct comparison of maintenance strategies to establish context. This is followed by a deeper dive into the technology framework, broken into digestible, interactive components. Finally, a global landscape explorer provides geographical context and real-world adoption insights. This structure was chosen to guide the user from the 'why' (benefits) to the 'what' (comparison), the 'how' (technology), and the 'where' (global adoption), facilitating a comprehensive understanding in a logical, engaging sequence. -->
-    <!-- Visualization & Content Choices: 
-        1. Key Benefits (Cost, Downtime, Lifespan): Report Info -> Goal: Inform -> Viz: Donut Chart & Stat Cards -> Interaction: Hover on cards for detail -> Justification: Provides a quick, high-impact visual summary of core benefits. -> Library: Chart.js.
-        2. ROI Range: Report Info -> Goal: Inform/Engage -> Viz: Interactive Slider -> Interaction: User drags slider to see ROI value update -> Justification: Makes the financial benefit tangible and interactive. -> Library: Vanilla JS.
-        3. Maintenance Strategy Comparison: Report Info -> Goal: Compare -> Viz: Bar Chart & Text Blocks -> Interaction: Buttons to switch between Reactive, Preventive, and Predictive views, updating the chart and text -> Justification: Clearly contrasts the old vs. new paradigms, highlighting the massive improvements in downtime/defects. -> Library: Chart.js.
-        4. Technology Framework: Report Info -> Goal: Organize/Explain -> Viz: HTML/CSS based flowchart -> Interaction: Clicking on a stage reveals a detailed explanation -> Justification: Deconstructs a complex system into a simple, interactive flow diagram. -> Library: Vanilla JS.
-        5. Global Landscape: Researched Info -> Goal: Explore/Contextualise -> Viz: Text panels and simple bar indicators -> Interaction: Clicking a country button updates the information panel -> Justification: Fulfills user request for global context and shows real-world relevance. -> Library: Vanilla JS.
-    -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-tertiary: #e9ecef;
+            --text-primary: #212529;
+            --text-secondary: #495057;
+            --text-tertiary: #6c757d;
+            --border: #dee2e6;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --shadow-hover: rgba(0, 0, 0, 0.15);
+            --accent: #0077b6;
+            --accent-hover: #005f8e;
+            --accent-dark: #023e8a;
+            --accent-light: #90cdf4;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --chart-blue: rgba(59, 130, 246, 0.7);
+            --chart-green: rgba(16, 185, 129, 0.7);
+            --chart-purple: rgba(139, 92, 246, 0.7);
+            --chart-red: rgba(239, 68, 68, 0.7);
+            --chart-orange: rgba(245, 158, 11, 0.7);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #262626;
+            --bg-tertiary: #404040;
+            --text-primary: #e5e5e5;
+            --text-secondary: #a3a3a3;
+            --text-tertiary: #737373;
+            --border: #404040;
+            --shadow: rgba(0, 0, 0, 0.3);
+            --shadow-hover: rgba(0, 0, 0, 0.5);
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --accent-dark: #1e40af;
+            --accent-light: #60a5fa;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --chart-blue: rgba(96, 165, 250, 0.7);
+            --chart-green: rgba(52, 211, 153, 0.7);
+            --chart-purple: rgba(167, 139, 250, 0.7);
+            --chart-red: rgba(248, 113, 113, 0.7);
+            --chart-orange: rgba(251, 191, 36, 0.7);
+        }
+
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8f9fa;
-            color: #212529;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
         }
+
+        header {
+            background-color: var(--bg-primary);
+            box-shadow: 0 1px 3px var(--shadow);
+        }
+
         .nav-button {
+            color: var(--text-secondary);
             transition: all 0.3s ease;
         }
-        .nav-button.active {
-            color: #0077b6;
-            border-bottom: 2px solid #0077b6;
+
+        .nav-button:hover {
+            color: var(--accent);
         }
+
+        .nav-button.active {
+            color: var(--accent);
+            border-bottom: 2px solid var(--accent);
+        }
+
         .card {
-            background-color: white;
+            background-color: var(--bg-primary);
             border-radius: 0.75rem;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            box-shadow: 0 4px 6px -1px var(--shadow), 0 2px 4px -2px var(--shadow);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
+
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+            box-shadow: 0 10px 15px -3px var(--shadow-hover), 0 4px 6px -2px var(--shadow-hover);
         }
+
         .chart-container {
             position: relative;
             width: 100%;
@@ -53,37 +110,169 @@
             height: 300px;
             max-height: 400px;
         }
+
         @media (min-width: 640px) {
             .chart-container {
                 height: 350px;
             }
         }
+
+        .tab-button {
+            background-color: transparent;
+            color: var(--text-secondary);
+        }
+
         .tab-button.active {
-            background-color: #0077b6;
+            background-color: var(--accent);
             color: white;
         }
+
+        .tab-container {
+            background-color: var(--bg-tertiary);
+        }
+
+        .country-button {
+            color: var(--text-secondary);
+            border-color: var(--border);
+            background-color: var(--bg-primary);
+        }
+
+        .country-button:hover {
+            background-color: var(--bg-tertiary);
+        }
+
         .country-button.active {
-            background-color: #023e8a;
+            background-color: var(--accent-dark);
             color: white;
-            border-color: #023e8a;
+            border-color: var(--accent-dark);
         }
+
+        .tech-card {
+            background-color: var(--bg-primary);
+            border-color: transparent;
+        }
+
         .tech-card.active {
-            border-color: #0077b6;
-            box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.3);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-light);
+        }
+
+        [data-theme="dark"] .tech-card.active {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+        }
+
+        .theme-toggle {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background-color: var(--bg-tertiary);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border: 2px solid var(--border);
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--accent-light);
+        }
+
+        [data-theme="dark"] .theme-toggle:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .theme-toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 22px;
+            height: 22px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        [data-theme="dark"] .theme-toggle-slider {
+            transform: translateX(30px);
+            background-color: var(--bg-primary);
+        }
+
+        .icon-badge {
+            background-color: var(--bg-tertiary);
+        }
+
+        [data-theme="dark"] .icon-badge {
+            background-color: var(--bg-tertiary);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        input[type="range"] {
+            background: var(--bg-tertiary);
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            background: var(--accent);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            background: var(--accent);
+        }
+
+        .adoption-bar-bg {
+            background-color: var(--bg-tertiary);
+        }
+
+        .adoption-bar {
+            background-color: var(--success);
+        }
+
+        footer {
+            background-color: var(--bg-primary);
+            border-top: 1px solid var(--border);
+        }
+
+        /* Animation for theme switch */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        main {
+            animation: fadeIn 0.5s ease;
         }
     </style>
 </head>
-<body class="antialiased">
+<body class="antialiased" data-theme="light">
 
-    <header class="bg-white shadow-md sticky top-0 z-50">
+    <header class="sticky top-0 z-50">
         <nav class="container mx-auto px-6 py-4">
             <div class="flex items-center justify-between">
-                <div class="text-2xl font-bold text-gray-800">PdM Framework</div>
+                <div class="text-2xl font-bold text-gradient">PdM Framework</div>
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="#benefits" class="nav-button text-gray-600 hover:text-blue-600 pb-1">Benefits</a>
-                    <a href="#comparison" class="nav-button text-gray-600 hover:text-blue-600 pb-1">Comparison</a>
-                    <a href="#framework" class="nav-button text-gray-600 hover:text-blue-600 pb-1">Technology</a>
-                    <a href="#global" class="nav-button text-gray-600 hover:text-blue-600 pb-1">Global Landscape</a>
+                    <a href="#benefits" class="nav-button pb-1">Benefits</a>
+                    <a href="#comparison" class="nav-button pb-1">Comparison</a>
+                    <a href="#framework" class="nav-button pb-1">Technology</a>
+                    <a href="#global" class="nav-button pb-1">Global Landscape</a>
+                    <div class="theme-toggle" id="themeToggle">
+                        <div class="theme-toggle-slider">
+                            <span id="themeIcon">🌞</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <div class="theme-toggle" id="themeToggleMobile">
+                        <div class="theme-toggle-slider">
+                            <span id="themeIconMobile">🌞</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </nav>
@@ -92,66 +281,66 @@
     <main class="container mx-auto px-6 py-8">
 
         <section id="hero" class="text-center mb-16">
-            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-800 mb-4">Real-Time Predictive Maintenance</h1>
-            <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">A paradigm shift from reactive and preventive strategies, leveraging AI and IoT to optimise industrial asset performance, reduce costs, and eliminate unplanned downtime.</p>
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4">Real-Time Predictive Maintenance</h1>
+            <p class="text-lg md:text-xl max-w-3xl mx-auto" style="color: var(--text-secondary);">A paradigm shift from reactive and preventive strategies, leveraging AI and IoT to optimise industrial asset performance, reduce costs, and eliminate unplanned downtime.</p>
         </section>
 
         <section id="benefits" class="mb-16">
-            <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Quantifiable Business Impact</h2>
-            <p class="text-center text-gray-600 mb-10">Implementing predictive maintenance delivers significant, measurable improvements across key operational metrics.</p>
+            <h2 class="text-3xl font-bold text-center mb-2">Quantifiable Business Impact</h2>
+            <p class="text-center mb-10" style="color: var(--text-secondary);">Implementing predictive maintenance delivers significant, measurable improvements across key operational metrics.</p>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 items-center">
                 <div class="space-y-6">
                     <div class="card p-6 flex items-center">
-                        <div class="p-3 bg-blue-100 rounded-full mr-4">
-                            <span class="text-2xl text-blue-600">💰</span>
+                        <div class="p-3 icon-badge rounded-full mr-4">
+                            <span class="text-2xl">💰</span>
                         </div>
                         <div>
-                            <h3 class="text-xl font-semibold text-gray-800">18-25% Cost Reduction</h3>
-                            <p class="text-gray-600">Lower overall maintenance expenditure.</p>
+                            <h3 class="text-xl font-semibold">18-25% Cost Reduction</h3>
+                            <p style="color: var(--text-secondary);">Lower overall maintenance expenditure.</p>
                         </div>
                     </div>
                     <div class="card p-6 flex items-center">
-                        <div class="p-3 bg-green-100 rounded-full mr-4">
-                            <span class="text-2xl text-green-600">⏱️</span>
+                        <div class="p-3 icon-badge rounded-full mr-4">
+                            <span class="text-2xl">⏱️</span>
                         </div>
                         <div>
-                            <h3 class="text-xl font-semibold text-gray-800">35-50% Downtime Reduction</h3>
-                            <p class="text-gray-600">Minimise unplanned operational halts.</p>
+                            <h3 class="text-xl font-semibold">35-50% Downtime Reduction</h3>
+                            <p style="color: var(--text-secondary);">Minimise unplanned operational halts.</p>
                         </div>
                     </div>
                     <div class="card p-6 flex items-center">
-                        <div class="p-3 bg-purple-100 rounded-full mr-4">
-                            <span class="text-2xl text-purple-600">⚙️</span>
+                        <div class="p-3 icon-badge rounded-full mr-4">
+                            <span class="text-2xl">⚙️</span>
                         </div>
                         <div>
-                            <h3 class="text-xl font-semibold text-gray-800">20-40% Asset Lifespan Extension</h3>
-                            <p class="text-gray-600">Increase the operational life of machinery.</p>
+                            <h3 class="text-xl font-semibold">20-40% Asset Lifespan Extension</h3>
+                            <p style="color: var(--text-secondary);">Increase the operational life of machinery.</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="card p-6">
-                    <h3 class="text-xl font-semibold text-center mb-4 text-gray-800">Average Performance Gains</h3>
+                    <h3 class="text-xl font-semibold text-center mb-4">Average Performance Gains</h3>
                     <div class="chart-container">
                         <canvas id="benefitsChart"></canvas>
                     </div>
                 </div>
             </div>
             <div class="card p-6 mt-8">
-                <h3 class="text-2xl font-bold text-center text-gray-800 mb-4">Return on Investment (ROI)</h3>
-                <p class="text-center text-gray-600 mb-6">Industry studies report a typical ROI between 250% and 545%.</p>
+                <h3 class="text-2xl font-bold text-center mb-4">Return on Investment (ROI)</h3>
+                <p class="text-center mb-6" style="color: var(--text-secondary);">Industry studies report a typical ROI between 250% and 545%.</p>
                 <div class="flex flex-col items-center">
-                    <input id="roiSlider" type="range" min="250" max="545" value="397" class="w-full max-w-md h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
-                    <span id="roiValue" class="mt-4 text-3xl font-bold text-blue-600">397%</span>
+                    <input id="roiSlider" type="range" min="250" max="545" value="397" class="w-full max-w-md h-2 rounded-lg appearance-none cursor-pointer">
+                    <span id="roiValue" class="mt-4 text-3xl font-bold" style="color: var(--accent);">397%</span>
                 </div>
             </div>
         </section>
 
         <section id="comparison" class="mb-16">
-            <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">The Evolution of Maintenance</h2>
-            <p class="text-center text-gray-600 mb-10">Understand the fundamental differences between maintenance strategies and their impact on operational efficiency.</p>
-            <div class="flex justify-center mb-8 bg-gray-100 rounded-lg p-2 max-w-md mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-2">The Evolution of Maintenance</h2>
+            <p class="text-center mb-10" style="color: var(--text-secondary);">Understand the fundamental differences between maintenance strategies and their impact on operational efficiency.</p>
+            <div class="flex justify-center mb-8 tab-container rounded-lg p-2 max-w-md mx-auto">
                 <button data-type="reactive" class="tab-button flex-1 py-2 px-4 rounded-md font-semibold transition">Reactive</button>
                 <button data-type="preventive" class="tab-button flex-1 py-2 px-4 rounded-md font-semibold transition">Preventive</button>
                 <button data-type="predictive" class="tab-button flex-1 py-2 px-4 rounded-md font-semibold transition active">Predictive</button>
@@ -159,15 +348,15 @@
 
             <div class="grid grid-cols-1 md:grid-cols-5 gap-8 items-center">
                 <div id="comparison-text" class="md:col-span-2 card p-6">
-                    <h3 id="strategy-title" class="text-2xl font-bold text-gray-800 mb-4"></h3>
-                    <p id="strategy-description" class="text-gray-600 mb-4"></p>
-                    <div class="border-t pt-4">
-                        <h4 class="font-semibold text-gray-700">Key Characteristic:</h4>
-                        <p id="strategy-characteristic" class="text-gray-600"></p>
+                    <h3 id="strategy-title" class="text-2xl font-bold mb-4"></h3>
+                    <p id="strategy-description" class="mb-4" style="color: var(--text-secondary);"></p>
+                    <div class="border-t pt-4" style="border-color: var(--border);">
+                        <h4 class="font-semibold" style="color: var(--text-tertiary);">Key Characteristic:</h4>
+                        <p id="strategy-characteristic" style="color: var(--text-secondary);"></p>
                     </div>
                 </div>
                 <div class="md:col-span-3 card p-6">
-                     <h3 class="text-xl font-semibold text-center mb-4 text-gray-800">Relative Performance Issues</h3>
+                     <h3 class="text-xl font-semibold text-center mb-4">Relative Performance Issues</h3>
                     <div class="chart-container" style="max-height: 350px;">
                         <canvas id="comparisonChart"></canvas>
                     </div>
@@ -176,78 +365,78 @@
         </section>
 
         <section id="framework" class="mb-16">
-            <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">The Predictive Maintenance Technology Framework</h2>
-            <p class="text-center text-gray-600 mb-10">A multi-layered system where data is acquired, transmitted, analysed, and acted upon in real-time.</p>
+            <h2 class="text-3xl font-bold text-center mb-2">The Predictive Maintenance Technology Framework</h2>
+            <p class="text-center mb-10" style="color: var(--text-secondary);">A multi-layered system where data is acquired, transmitted, analysed, and acted upon in real-time.</p>
             
             <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4 mb-8">
-                <div data-tech="sensors" class="tech-card card p-4 w-full md:w-auto text-center cursor-pointer border-2 border-transparent">
+                <div data-tech="sensors" class="tech-card card p-4 w-full md:w-auto text-center cursor-pointer border-2">
                     <span class="text-3xl">📡</span>
                     <h4 class="font-semibold mt-2">1. Data Acquisition</h4>
                 </div>
-                <div class="text-2xl text-gray-400 hidden md:block">→</div>
-                <div data-tech="communication" class="tech-card card p-4 w-full md:w-auto text-center cursor-pointer border-2 border-transparent">
+                <div class="text-2xl hidden md:block" style="color: var(--text-tertiary);">→</div>
+                <div data-tech="communication" class="tech-card card p-4 w-full md:w-auto text-center cursor-pointer border-2">
                     <span class="text-3xl">🌐</span>
                     <h4 class="font-semibold mt-2">2. Data Transmission</h4>
                 </div>
-                <div class="text-2xl text-gray-400 hidden md:block">→</div>
-                <div data-tech="analytics" class="tech-card card p-4 w-full md:w-auto text-center cursor-pointer border-2 border-transparent">
+                <div class="text-2xl hidden md:block" style="color: var(--text-tertiary);">→</div>
+                <div data-tech="analytics" class="tech-card card p-4 w-full md:w-auto text-center cursor-pointer border-2">
                      <span class="text-3xl">🧠</span>
                     <h4 class="font-semibold mt-2">3. Advanced Analytics</h4>
                 </div>
-                <div class="text-2xl text-gray-400 hidden md:block">→</div>
-                <div data-tech="action" class="tech-card card p-4 w-full md:w-auto text-center cursor-pointer border-2 border-transparent">
+                <div class="text-2xl hidden md:block" style="color: var(--text-tertiary);">→</div>
+                <div data-tech="action" class="tech-card card p-4 w-full md:w-auto text-center cursor-pointer border-2">
                     <span class="text-3xl">🛠️</span>
                     <h4 class="font-semibold mt-2">4. Proactive Action</h4>
                 </div>
             </div>
 
             <div id="tech-details" class="card p-8 min-h-[200px]">
-                <h3 id="tech-title" class="text-2xl font-bold text-gray-800 mb-4"></h3>
-                <p id="tech-description" class="text-gray-600"></p>
+                <h3 id="tech-title" class="text-2xl font-bold mb-4"></h3>
+                <p id="tech-description" style="color: var(--text-secondary);"></p>
             </div>
         </section>
 
         <section id="global" class="mb-16">
-            <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Global Landscape & Adoption</h2>
-            <p class="text-center text-gray-600 mb-10">Predictive maintenance is being adopted globally, with key hubs of innovation and implementation emerging across various industrial sectors.</p>
+            <h2 class="text-3xl font-bold text-center mb-2">Global Landscape & Adoption</h2>
+            <p class="text-center mb-10" style="color: var(--text-secondary);">Predictive maintenance is being adopted globally, with key hubs of innovation and implementation emerging across various industrial sectors.</p>
             
             <div class="flex flex-wrap justify-center gap-3 mb-8">
-                <button data-country="usa" class="country-button active font-medium py-2 px-4 border border-gray-300 rounded-full transition">United States</button>
-                <button data-country="uk" class="country-button font-medium py-2 px-4 border border-gray-300 rounded-full transition">United Kingdom</button>
-                <button data-country="china" class="country-button font-medium py-2 px-4 border border-gray-300 rounded-full transition">China</button>
-                <button data-country="japan" class="country-button font-medium py-2 px-4 border border-gray-300 rounded-full transition">Japan</button>
-                <button data-country="nordics" class="country-button font-medium py-2 px-4 border border-gray-300 rounded-full transition">Northern Europe</button>
-                <button data-country="switzerland" class="country-button font-medium py-2 px-4 border border-gray-300 rounded-full transition">Switzerland</button>
-                <button data-country="israel" class="country-button font-medium py-2 px-4 border border-gray-300 rounded-full transition">Israel</button>
-                <button data-country="russia" class="country-button font-medium py-2 px-4 border border-gray-300 rounded-full transition">Russia</button>
+                <button data-country="usa" class="country-button active font-medium py-2 px-4 rounded-full transition">United States</button>
+                <button data-country="uk" class="country-button font-medium py-2 px-4 rounded-full transition">United Kingdom</button>
+                <button data-country="china" class="country-button font-medium py-2 px-4 rounded-full transition">China</button>
+                <button data-country="japan" class="country-button font-medium py-2 px-4 rounded-full transition">Japan</button>
+                <button data-country="nordics" class="country-button font-medium py-2 px-4 rounded-full transition">Northern Europe</button>
+                <button data-country="switzerland" class="country-button font-medium py-2 px-4 rounded-full transition">Switzerland</button>
+                <button data-country="israel" class="country-button font-medium py-2 px-4 rounded-full transition">Israel</button>
+                <button data-country="russia" class="country-button font-medium py-2 px-4 rounded-full transition">Russia</button>
             </div>
 
             <div class="card p-8">
                 <div class="flex flex-col md:flex-row items-start">
-                    <h3 id="country-title" class="text-2xl md:text-3xl font-bold text-gray-800 mb-4 md:mb-0 md:mr-6"></h3>
+                    <h3 id="country-title" class="text-2xl md:text-3xl font-bold mb-4 md:mb-0 md:mr-6"></h3>
                     <div id="country-adoption" class="flex items-center space-x-2">
-                        <span class="font-semibold text-gray-700">Adoption Level:</span>
-                        <div class="w-32 h-4 bg-gray-200 rounded-full">
-                            <div id="adoption-bar" class="h-4 bg-green-500 rounded-full"></div>
+                        <span class="font-semibold" style="color: var(--text-tertiary);">Adoption Level:</span>
+                        <div class="w-32 h-4 adoption-bar-bg rounded-full">
+                            <div id="adoption-bar" class="h-4 adoption-bar rounded-full"></div>
                         </div>
                     </div>
                 </div>
-                <div class="border-t my-6"></div>
+                <div class="my-6" style="border-top: 1px solid var(--border);"></div>
                 <div>
-                    <h4 class="text-xl font-semibold text-gray-700 mb-2">Key Sectors & Focus Areas:</h4>
-                    <p id="country-sectors" class="text-gray-600"></p>
+                    <h4 class="text-xl font-semibold mb-2" style="color: var(--text-tertiary);">Key Sectors & Focus Areas:</h4>
+                    <p id="country-sectors" style="color: var(--text-secondary);"></p>
                 </div>
                 <div class="mt-4">
-                    <h4 class="text-xl font-semibold text-gray-700 mb-2">Regional Summary:</h4>
-                    <p id="country-summary" class="text-gray-600"></p>
+                    <h4 class="text-xl font-semibold mb-2" style="color: var(--text-tertiary);">Regional Summary:</h4>
+                    <p id="country-summary" style="color: var(--text-secondary);"></p>
                 </div>
             </div>
         </section>
 
     </main>
 
-    <footer class="bg-white mt-16 border-t">
-        <div class="container mx-auto px-6 py-8 text-center text-gray-600">
+    <footer class="mt-16">
+        <div class="container mx-auto px-6 py-8 text-center" style="color: var(--text-secondary);">
             <p>&copy; 2025 Predictive Maintenance Framework Analysis. Information compiled from global industry and academic sources.</p>
             <p class="text-sm mt-2">Standards from ISO, IEC, IEEE, and NIST provide the regulatory framework for implementation.</p>
         </div>
@@ -255,28 +444,106 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Theme Management
+            const themeToggle = document.getElementById('themeToggle');
+            const themeToggleMobile = document.getElementById('themeToggleMobile');
+            const themeIcon = document.getElementById('themeIcon');
+            const themeIconMobile = document.getElementById('themeIconMobile');
+            const body = document.body;
 
+            // Check for saved theme preference or default to light
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            body.setAttribute('data-theme', savedTheme);
+            updateThemeIcons(savedTheme);
+
+            function updateThemeIcons(theme) {
+                const icon = theme === 'dark' ? '🌙' : '🌞';
+                themeIcon.textContent = icon;
+                themeIconMobile.textContent = icon;
+            }
+
+            function toggleTheme() {
+                const currentTheme = body.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                
+                body.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                updateThemeIcons(newTheme);
+                
+                // Update charts if they exist
+                if (window.benefitsChart) {
+                    updateChartColors();
+                }
+            }
+
+            themeToggle.addEventListener('click', toggleTheme);
+            themeToggleMobile.addEventListener('click', toggleTheme);
+
+            // Charts configuration
+            function getChartColors() {
+                const theme = body.getAttribute('data-theme');
+                const isDark = theme === 'dark';
+                
+                return {
+                    blue: isDark ? 'rgba(96, 165, 250, 0.7)' : 'rgba(59, 130, 246, 0.7)',
+                    green: isDark ? 'rgba(52, 211, 153, 0.7)' : 'rgba(16, 185, 129, 0.7)',
+                    purple: isDark ? 'rgba(167, 139, 250, 0.7)' : 'rgba(139, 92, 246, 0.7)',
+                    red: isDark ? 'rgba(248, 113, 113, 0.7)' : 'rgba(239, 68, 68, 0.7)',
+                    orange: isDark ? 'rgba(251, 191, 36, 0.7)' : 'rgba(245, 158, 11, 0.7)',
+                    text: isDark ? '#e5e5e5' : '#212529',
+                    grid: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+                };
+            }
+
+            function updateChartColors() {
+                const colors = getChartColors();
+                
+                // Update benefits chart
+                if (window.benefitsChart) {
+                    window.benefitsChart.data.datasets[0].backgroundColor = [
+                        colors.blue,
+                        colors.green,
+                        colors.purple
+                    ];
+                    window.benefitsChart.options.plugins.legend.labels.color = colors.text;
+                    window.benefitsChart.update();
+                }
+                
+                // Update comparison chart
+                if (window.comparisonChart) {
+                    window.comparisonChart.options.plugins.legend.labels.color = colors.text;
+                    window.comparisonChart.options.scales.x.ticks.color = colors.text;
+                    window.comparisonChart.options.scales.x.title.color = colors.text;
+                    window.comparisonChart.options.scales.y.ticks.color = colors.text;
+                    window.comparisonChart.options.scales.x.grid.color = colors.grid;
+                    window.comparisonChart.options.scales.y.grid.color = colors.grid;
+                    window.comparisonChart.update();
+                }
+            }
+
+            // Benefits Chart
+            const colors = getChartColors();
             const benefitsData = {
                 labels: ['Maintenance Cost Reduction', 'Unplanned Downtime Reduction', 'Asset Lifespan Extension'],
                 datasets: [{
                     label: 'Performance Gains',
                     data: [21.5, 42.5, 30], 
                     backgroundColor: [
-                        'rgba(59, 130, 246, 0.7)',
-                        'rgba(16, 185, 129, 0.7)',
-                        'rgba(139, 92, 246, 0.7)',
+                        colors.blue,
+                        colors.green,
+                        colors.purple
                     ],
                     borderColor: [
-                        'rgba(59, 130, 246, 1)',
-                        'rgba(16, 185, 129, 1)',
-                        'rgba(139, 92, 246, 1)',
+                        colors.blue.replace('0.7', '1'),
+                        colors.green.replace('0.7', '1'),
+                        colors.purple.replace('0.7', '1')
                     ],
                     borderWidth: 1
                 }]
             };
 
             const benefitsCtx = document.getElementById('benefitsChart').getContext('2d');
-            new Chart(benefitsCtx, {
+            window.benefitsChart = new Chart(benefitsCtx, {
                 type: 'doughnut',
                 data: benefitsData,
                 options: {
@@ -285,6 +552,9 @@
                     plugins: {
                         legend: {
                             position: 'bottom',
+                            labels: {
+                                color: colors.text
+                            }
                         },
                         tooltip: {
                             callbacks: {
@@ -304,41 +574,43 @@
                 }
             });
 
+            // ROI Slider
             const roiSlider = document.getElementById('roiSlider');
             const roiValue = document.getElementById('roiValue');
             roiSlider.addEventListener('input', (event) => {
                 roiValue.textContent = `${event.target.value}%`;
             });
 
+            // Comparison Chart
             const comparisonData = {
                 labels: ['Unplanned Downtime', 'Component Defects'],
                 datasets: [
                     {
                         label: 'Reactive',
                         data: [3.3, 16],
-                        backgroundColor: 'rgba(239, 68, 68, 0.7)',
-                        borderColor: 'rgba(239, 68, 68, 1)',
+                        backgroundColor: colors.red,
+                        borderColor: colors.red.replace('0.7', '1'),
                         borderWidth: 1
                     },
                     {
                         label: 'Preventive',
                         data: [1.8, 5],
-                        backgroundColor: 'rgba(245, 158, 11, 0.7)',
-                        borderColor: 'rgba(245, 158, 11, 1)',
+                        backgroundColor: colors.orange,
+                        borderColor: colors.orange.replace('0.7', '1'),
                         borderWidth: 1
                     },
                     {
                         label: 'Predictive',
                         data: [1, 1],
-                        backgroundColor: 'rgba(16, 185, 129, 0.7)',
-                        borderColor: 'rgba(16, 185, 129, 1)',
+                        backgroundColor: colors.green,
+                        borderColor: colors.green.replace('0.7', '1'),
                         borderWidth: 1
                     }
                 ]
             };
 
             const comparisonCtx = document.getElementById('comparisonChart').getContext('2d');
-            const comparisonChart = new Chart(comparisonCtx, {
+            window.comparisonChart = new Chart(comparisonCtx, {
                 type: 'bar',
                 data: {
                     labels: comparisonData.labels,
@@ -350,9 +622,12 @@
                     indexAxis: 'y',
                     plugins: {
                         legend: {
-                            display: false
+                            display: false,
+                            labels: {
+                                color: colors.text
+                            }
                         },
-                         tooltip: {
+                        tooltip: {
                             callbacks: {
                                 label: function(context) {
                                     let label = context.dataset.label || '';
@@ -370,13 +645,29 @@
                             beginAtZero: true,
                             title: {
                                 display: true,
-                                text: 'Multiplier vs. Predictive Baseline (1x)'
+                                text: 'Multiplier vs. Predictive Baseline (1x)',
+                                color: colors.text
+                            },
+                            ticks: {
+                                color: colors.text
+                            },
+                            grid: {
+                                color: colors.grid
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                color: colors.text
+                            },
+                            grid: {
+                                color: colors.grid
                             }
                         }
                     }
                 }
             });
             
+            // Strategy Info
             const strategyInfo = {
                 reactive: {
                     title: 'Reactive Maintenance',
@@ -401,12 +692,27 @@
             const tabButtons = document.querySelectorAll('.tab-button');
             function updateComparisonView(type) {
                 const info = strategyInfo[type];
+                const colors = getChartColors();
+                
                 document.getElementById('strategy-title').textContent = info.title;
                 document.getElementById('strategy-description').textContent = info.description;
                 document.getElementById('strategy-characteristic').textContent = info.characteristic;
 
-                comparisonChart.data.datasets = [info.chartData];
-                comparisonChart.update();
+                // Update chart data with current theme colors
+                const chartData = {...info.chartData};
+                if (type === 'reactive') {
+                    chartData.backgroundColor = colors.red;
+                    chartData.borderColor = colors.red.replace('0.7', '1');
+                } else if (type === 'preventive') {
+                    chartData.backgroundColor = colors.orange;
+                    chartData.borderColor = colors.orange.replace('0.7', '1');
+                } else {
+                    chartData.backgroundColor = colors.green;
+                    chartData.borderColor = colors.green.replace('0.7', '1');
+                }
+                
+                window.comparisonChart.data.datasets = [chartData];
+                window.comparisonChart.update();
                 
                 tabButtons.forEach(btn => {
                     btn.classList.toggle('active', btn.dataset.type === type);
@@ -421,8 +727,9 @@
 
             updateComparisonView('predictive');
 
+            // Tech Framework
             const techInfo = {
-                 sensors: {
+                sensors: {
                     title: '1. Data Acquisition (Sensors)',
                     description: 'This is the foundation of PdM. Advanced sensors (vibration, thermal, acoustic, pressure) are deployed on critical assets to continuously collect operational data. Multi-sensor fusion systems combine data streams to achieve up to 99.2% prediction accuracy.'
                 },
@@ -457,6 +764,7 @@
             });
             updateTechView('sensors');
             
+            // Country Data
             const countryData = {
                 usa: {
                     title: 'United States',
@@ -528,6 +836,7 @@
             });
             updateCountryView('usa');
             
+            // Navigation highlighting
             const navLinks = document.querySelectorAll('.nav-button');
             const sections = document.querySelectorAll('main section');
             window.addEventListener('scroll', () => {
